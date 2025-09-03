@@ -198,8 +198,8 @@ def filter_second_choices_by_global_feasibility(current_sp: str,
 # ──────────────────────────────────────────────────────────────────────────────
 # UI
 # ──────────────────────────────────────────────────────────────────────────────
-st.set_page_config(page_title="Scheduler Helper", layout="wide")
-st.title("Scheduler Helper — Fairness Rules Engine")
+st.set_page_config(page_title="SEA44 Schedule Generator", layout="wide")
+st.title("SEA44 Schedule Generator")
 
 with st.sidebar:
     st.subheader("Specialists")
@@ -245,8 +245,20 @@ def current_grid_df() -> pd.DataFrame:
         rows.append(row)
     return pd.DataFrame(rows, columns=["Time"] + COL_LABELS)
 
-st.subheader("Schedule (visual only)")
-st.dataframe(current_grid_df(), use_container_width=True, hide_index=True)
+st.subheader("Swing Shift")
+
+def style_grid(df: pd.DataFrame):
+    styler = df.style
+    for label in COL_LABELS:
+        styler = styler.apply(
+            lambda col: ['background-color: #000000; color: #000000' if v == "███" else '' for v in col],
+            subset=[label]
+        )
+    return styler
+
+_df = current_grid_df()
+st.dataframe(style_grid(_df), use_container_width=True, hide_index=True)
+
 
 st.divider()
 st.subheader("Pick Slots")
